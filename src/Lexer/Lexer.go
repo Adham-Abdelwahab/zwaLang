@@ -2,7 +2,6 @@ package Lexer
 
 import (
 	"fmt"
-	"unicode"
 )
 
 type Lexer struct {
@@ -15,7 +14,7 @@ type Lexer struct {
 // NewLexer initializes a new lexer with the given input string
 func NewLexer(input string) *Lexer {
 	l := &Lexer{input: input}
-	l.readChar()
+	//l.readChar()
 	return l;
 }
 
