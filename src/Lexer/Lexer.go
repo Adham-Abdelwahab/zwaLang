@@ -1,4 +1,4 @@
-package Lexer
+package main
 
 import (
 	"fmt"
@@ -9,14 +9,15 @@ import (
 type TokenType string
 
 const (
-	NUMBER 		TokenType = "NUMBER"
-	IDENT 		TokenType = "IDENT"		// Identifiers
-	ASSIGN 		TokenType = "ASSIGN"	// =
-	PLUS 		TokenType = "PLUS"		// +
-	COLON 		TokenType = "COLON"		// :
-	SHOW 		TokenType = "SHOW"		// show
-	EOF 		TokenType = "EOF"		// End of File
-	ILLEGAL 	TokenType = "ILLEGAL"	// Illegal token
+	NUMBER 			TokenType = "NUMBER"					// Number	
+	NATURAL_NUMBER_TYPE 	TokenType = "NATURAL_NUMBER_TYPE" 		// Natural Number Type
+	IDENT 			TokenType = "IDENT"						// Identifiers
+	ASSIGN 			TokenType = "ASSIGN"					// =
+	PLUS 			TokenType = "PLUS"						// +
+	COLON 			TokenType = "COLON"						// :
+	SHOW 			TokenType = "SHOW"						// show
+	EOF 			TokenType = "EOF"						// End of File
+	ILLEGAL 		TokenType = "ILLEGAL"					// Illegal token
 )
 
 // Token structure
@@ -70,10 +71,14 @@ func (l *Lexer) NextToken() Token {
 			tok.Type = EOF
 		default:
 			if isLetter(l.ch) {
-				// TODO: Implement this
+				identifier := l.readIdentifier()
+				tok.Type = lookupIdentifier(identifier)
+				tok.Literal = identifier
+				return tok
 			} else if isDigit(l.ch) {
 				tok.Type = NUMBER
 				tok.Literal = l.readNumber()
+				return tok
 			} else {
 				tok = newToken(ILLEGAL, l.ch)
 			}
@@ -100,6 +105,16 @@ func (l *Lexer) readNumber() string {
 	return l.input[position:l.position]
 }
 
+// readIdentifier reads an identifier from the input and returns it as a string
+func (l *Lexer) readIdentifier() string {
+	position := l.position
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+
+	return l.input[position:l.position]
+}
+
 // -- Helper Functions --
 
 // newToken creates a new token with the given type and literal
@@ -115,6 +130,18 @@ func isLetter(ch byte) bool {
 // isDigit checks if the given character is a digit
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
+}
+
+// lookupIdentifier checks if the given identifier is a keyword (i.e. show) and returns the corresponding token type
+func lookupIdentifier(identifier string) TokenType {
+	switch identifier {
+		case "show":
+			return SHOW
+		case "number":
+			return NATURAL_NUMBER_TYPE
+		default:
+			return IDENT
+	}
 }
 
 // -- Main --
