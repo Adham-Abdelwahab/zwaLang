@@ -2,6 +2,7 @@ package Lexer
 
 import (
 	"fmt"
+	"unicode"
 )
 
 // Token types
@@ -58,10 +59,27 @@ func (l *Lexer) NextToken() Token {
 	l.skipWhitespace()
 
 	switch l.ch {
-	case '=':
-		tok = newToken(ASSIGN, l.ch)
+		case '=':
+			tok = newToken(ASSIGN, l.ch)
+		case '+':
+			tok = newToken(PLUS, l.ch)
+		case ':':
+			tok = newToken(COLON, l.ch)
+		case 0:
+			tok.Literal = ""
+			tok.Type = EOF
+		default:
+			if isLetter(l.ch) {
+				// TODO: Implement this
+			} else if isDigit(l.ch) {
+				tok.Type = NUMBER
+				tok.Literal = l.readNumber()
+			} else {
+				tok = newToken(ILLEGAL, l.ch)
+			}
 	}
 
+	l.readChar()
 	return tok
 }
 
@@ -72,11 +90,31 @@ func (l *Lexer) skipWhitespace() {
 	}
 }
 
+// readNumber reads a number from the input and returns it as a string
+func (l *Lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+
+	return l.input[position:l.position]
+}
+
 // -- Helper Functions --
 
 // newToken creates a new token with the given type and literal
 func newToken(tokenType TokenType, ch byte) Token {
 	return Token{Type: tokenType, Literal: string(ch)}
+}
+
+// isLetter checks if the given character is a letter
+func isLetter(ch byte) bool {
+	return unicode.IsLetter(rune(ch)) || ch == '_'
+}
+
+// isDigit checks if the given character is a digit
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }
 
 // -- Main --
