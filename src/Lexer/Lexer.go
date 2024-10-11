@@ -1,30 +1,9 @@
-package main
+package lexer
 
 import (
-	"fmt"
 	"unicode"
+	"zwaLang/src/token"
 )
-
-// Token types
-type TokenType string
-
-const (
-	NUMBER 			TokenType = "NUMBER"					// Number	
-	NATURAL_NUMBER_TYPE 	TokenType = "NATURAL_NUMBER_TYPE" 		// Natural Number Type
-	IDENT 			TokenType = "IDENT"						// Identifiers
-	ASSIGN 			TokenType = "ASSIGN"					// =
-	PLUS 			TokenType = "PLUS"						// +
-	COLON 			TokenType = "COLON"						// :
-	SHOW 			TokenType = "SHOW"						// show
-	EOF 			TokenType = "EOF"						// End of File
-	ILLEGAL 		TokenType = "ILLEGAL"					// Illegal token
-)
-
-// Token structure
-type Token struct {
-	Type 	TokenType
-	Literal string
-}
 
 type Lexer struct {
 	input 			string
@@ -54,21 +33,21 @@ func (l *Lexer) readChar() {
 }
 
 // NextToken generates the next token from the input
-func (l *Lexer) NextToken() Token {
-	var tok Token
+func (l *Lexer) NextToken() token.Token {
+	var tok token.Token
 
 	l.skipWhitespace()
 
 	switch l.ch {
 		case '=':
-			tok = newToken(ASSIGN, l.ch)
+			tok = newToken(token.ASSIGN, l.ch)
 		case '+':
-			tok = newToken(PLUS, l.ch)
+			tok = newToken(token.PLUS, l.ch)
 		case ':':
-			tok = newToken(COLON, l.ch)
+			tok = newToken(token.COLON, l.ch)
 		case 0:
 			tok.Literal = ""
-			tok.Type = EOF
+			tok.Type = token.EOF
 		default:
 			if isLetter(l.ch) {
 				identifier := l.readIdentifier()
@@ -76,11 +55,11 @@ func (l *Lexer) NextToken() Token {
 				tok.Literal = identifier
 				return tok
 			} else if isDigit(l.ch) {
-				tok.Type = NUMBER
+				tok.Type = token.NUMBER
 				tok.Literal = l.readNumber()
 				return tok
 			} else {
-				tok = newToken(ILLEGAL, l.ch)
+				tok = newToken(token.ILLEGAL, l.ch)
 			}
 	}
 
@@ -118,8 +97,8 @@ func (l *Lexer) readIdentifier() string {
 // -- Helper Functions --
 
 // newToken creates a new token with the given type and literal
-func newToken(tokenType TokenType, ch byte) Token {
-	return Token{Type: tokenType, Literal: string(ch)}
+func newToken(tokenType token.TokenType, ch byte) token.Token {
+	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
 // isLetter checks if the given character is a letter
@@ -133,29 +112,13 @@ func isDigit(ch byte) bool {
 }
 
 // lookupIdentifier checks if the given identifier is a keyword (i.e. show) and returns the corresponding token type
-func lookupIdentifier(identifier string) TokenType {
+func lookupIdentifier(identifier string) token.TokenType {
 	switch identifier {
 		case "show":
-			return SHOW
+			return token.SHOW
 		case "number":
-			return NATURAL_NUMBER_TYPE
+			return token.NATURAL_NUMBER_TYPE
 		default:
-			return IDENT
-	}
-}
-
-// -- Main --
-
-func main() {
-	testInputString := `x: number = 10
-						y: number = 20
-						z = x + y
-						show z`
-	fmt.Println(testInputString)
-
-	l := NewLexer(testInputString)
-
-	for tok := l.NextToken(); tok.Type != EOF; tok = l.NextToken() {
-		fmt.Printf("%+v\n", tok)
+			return token.IDENT
 	}
 }
