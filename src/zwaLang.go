@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"zwaLang/src/lexer"
 	//"zwaLang/src/token"
 	"zwaLang/src/parser"
+	"zwaLang/src/interpreter"
 )
 
 // -- Main --
@@ -14,7 +15,7 @@ func main() {
 						y: number = 20
 						z = x + y
 						show z`
-	fmt.Println(testInputString)
+	//fmt.Println(testInputString)
 
 	l := lexer.NewLexer(testInputString)
 	// for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
@@ -22,10 +23,12 @@ func main() {
 	// }
 
 	p := parser.NewParser(l)
-	fmt.Printf("%+v\n", p)
+	//fmt.Printf("%+v\n", p)
 	ast := p.ParseProgram()
 
-	for _, node := range ast {
-		fmt.Printf("%+v\n", node)
-	}
+	// for _, node := range ast {
+	// 	fmt.Printf("%+v\n", node)
+	// }
+	i := interpreter.NewInterpreter()
+	i.Eval(ast)
 }

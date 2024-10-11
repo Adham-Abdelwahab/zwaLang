@@ -16,8 +16,8 @@ type VarDeclaration struct {
 
 type Assignment struct {
 	VarName string
-	Left    Node
-	Right   Node
+	Left    string
+	Right   string
 }
 
 type PrintStatement struct {
