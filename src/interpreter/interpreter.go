@@ -44,15 +44,9 @@ func (i *Interpreter) evalVarDeclaration(node *parser.VarDeclaration) {
 }
 
 func (i *Interpreter) evalAssignment(node *parser.Assignment) {
-	leftVal, ok1 := i.env[node.Left]
-	rightVal, ok2 := i.env[node.Right]
-
-	if !ok1 || !ok2 {
-		fmt.Printf("Variable not found: %s or %s\n", node.Left, node.Right)
-		return
-	}
-
-	i.env[node.VarName] = leftVal + rightVal
+	result := i.evalExpression(node.Expression)
+	// technically we should check if the variable is already in the enviornment
+	i.env[node.VarName] = result
 }
 
 func (i *Interpreter) evalPrintStatement(node *parser.PrintStatement) {
@@ -62,4 +56,30 @@ func (i *Interpreter) evalPrintStatement(node *parser.PrintStatement) {
 		return
 	}
 	fmt.Println(val)
+}
+
+func (i *Interpreter) evalExpression(expr parser.Expression) int {
+	switch e := expr.(type) {
+		case *parser.NumberLiteral:
+			return e.Value
+		case *parser.Variable:
+			val, ok := i.env[e.Name]
+			if !ok {
+				fmt.Printf("Variable not found: %s\n", e.Name)
+			}
+			return val
+		case *parser.BinaryExpression:
+			leftVal := i.evalExpression(e.Left)
+			rightVal := i.evalExpression(e.Right)
+			switch e.Operator {
+				case "+":
+					return leftVal + rightVal
+				default:
+					fmt.Printf("Unknown operator: %s\n", e.Operator)
+					return 0
+			}
+		default:
+			fmt.Printf("Unknown expression type: %T\n", e)
+			return 0
+	}	
 }
