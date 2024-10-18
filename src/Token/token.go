@@ -12,7 +12,12 @@ const (
 	COLON 					TokenType = "COLON"						// :
 	SHOW 					TokenType = "SHOW"						// show
 	EOF 					TokenType = "EOF"						// End of File
+	LPAREN					TokenType = "LPAREN"					// (
+	RPAREN					TokenType = "RPAREN"					// )
 	ILLEGAL 				TokenType = "ILLEGAL"					// Illegal token
+	MINUS					TokenType = "MINUS"						// -
+	ASTERISK				TokenType = "ASTERISK"					// *
+	SLASH					TokenType = "SLASH"						// / {division}
 )
 
 // Token structure

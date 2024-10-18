@@ -17,13 +17,21 @@ func main() {
 						z = x + y + t
 						show z
 						t = 100
+						show t
+						x = x * y
+						show x
+						x = x - y
+						show x
+						t = t / y
+						show t
+						t = (3 + 2) * 5
 						show t`
 	//fmt.Println(testInputString)
 
 	l := lexer.NewLexer(testInputString)
 	//for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
 	// 	fmt.Printf("%+v\n", tok)
-	// }
+	//}
 
 	p := parser.NewParser(l)
 	//fmt.Printf("%+v\n", p)
