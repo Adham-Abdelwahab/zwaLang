@@ -13,3 +13,6 @@ t = t / y
 show t
 t = (3 + 2) * 5
 show t
+qq: number = 4
+qq = qq % 2
+show qq

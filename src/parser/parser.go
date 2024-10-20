@@ -69,7 +69,7 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 }
 
 func (p *Parser) peekTokenIsOperator() bool {
-	return p.peekToken.Type == token.PLUS || p.peekToken.Type == token.MINUS || p.peekToken.Type == token.ASTERISK || p.peekToken.Type == token.SLASH
+	return p.peekToken.Type == token.PLUS || p.peekToken.Type == token.MINUS || p.peekToken.Type == token.ASTERISK || p.peekToken.Type == token.SLASH || p.peekToken.Type == token.MODULO
 }
 
 func (p *Parser) ParseProgram() []Node {
@@ -142,7 +142,7 @@ func (p *Parser) parseExpression() Expression {
 func (p *Parser) parseTerm() Expression {
 	left := p.parseFactor()
 
-	for p.curToken.Type == token.ASTERISK || p.curToken.Type == token.SLASH {
+	for p.curToken.Type == token.ASTERISK || p.curToken.Type == token.SLASH || p.curToken.Type == token.MODULO {
 		operator := p.curToken.Literal
 		p.nextToken()
 		right := p.parseFactor()

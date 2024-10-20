@@ -18,6 +18,7 @@ const (
 	MINUS					TokenType = "MINUS"						// -
 	ASTERISK				TokenType = "ASTERISK"					// *
 	SLASH					TokenType = "SLASH"						// / {division}
+	MODULO					TokenType = "MODULO"					// %
 )
 
 // Token structure

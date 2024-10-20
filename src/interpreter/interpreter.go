@@ -80,6 +80,8 @@ func (i *Interpreter) evalExpression(expr parser.Expression) int {
 					return leftVal * rightVal
 				case "/":
 					return leftVal / rightVal
+				case "%":
+					return leftVal % rightVal
 				default:
 					fmt.Printf("Unknown operator: %s\n", e.Operator)
 					return 0
