@@ -6,23 +6,23 @@ test.zwa is a test file that can be used to test the compiler & is a basic examp
 Lexer, Parser, & Interpreter are all written in go
 
 ## Currently Support
-Assignment of natural number to a variable
-Addition of two natural number variables
-Printing a variable
-Adding multiple variables together
-Parenthesis support for arithmetic operations
-Subtraction, division, multiplication
-Read files of ext .zwa
-Modulo support
+- Assignment of natural number to a variable
+- Addition of two natural number variables
+- Printing a variable
+- Adding multiple variables together
+- Parenthesis support for arithmetic operations
+- Subtraction, division, multiplication
+- Read files of ext .zwa
+- Modulo support
 
 ## In Development
-Printing expr -- show 3 + 5
+- Printing expr -- `show 3 + 5`
 
 ## To Develop
-String support
-Stricter rules
-Assignment of an expr -- qq: number = 22 + 22
+- String support
+- Stricter rules
+- Assignment of an expr -- qq: number = 22 + 22
 
 ## Pipeline Goals:
-Shell script to run zwa files: zwa exec fileName.zwa
-Syntax highlighting for zwaLang
+- Shell script to run zwa files: `zwa exec fileName.zwa`
+- Syntax highlighting for zwaLang
