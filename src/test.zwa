@@ -1,0 +1,15 @@
+x: number = 10
+y: number = 20
+t: number = 20
+z = x + y + t
+show z
+t = 100
+show t
+x = x * y
+show x
+x = x - y
+show x
+t = t / y
+show t
+t = (3 + 2) * 5
+show t

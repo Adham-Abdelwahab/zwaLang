@@ -1,34 +1,33 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"zwaLang/src/lexer"
 	//"zwaLang/src/token"
 	"zwaLang/src/parser"
 	"zwaLang/src/interpreter"
+	"os"
+	"path/filepath"
 )
 
 // -- Main --
-
 func main() {
-	testInputString := `x: number = 10
-						y: number = 20
-						t: number = 20
-						z = x + y + t
-						show z
-						t = 100
-						show t
-						x = x * y
-						show x
-						x = x - y
-						show x
-						t = t / y
-						show t
-						t = (3 + 2) * 5
-						show t`
-	//fmt.Println(testInputString)
+	if len(os.Args) < 2 {
+		fmt.Println("Missing parameter, provide a file name")
+		os.Exit(1)
+	}
+	if filepath.Ext(os.Args[1]) != ".zwa" {
+		fmt.Println("File must have a .zwa extension")
+		os.Exit(1)
+	}
+	content, err := os.ReadFile(os.Args[1])
+	if err != nil {
+		fmt.Printf("Error reading file %s: %s\n", os.Args[1], err)
+		os.Exit(1)
+	}
+	contentString := string(content)
 
-	l := lexer.NewLexer(testInputString)
+	l := lexer.NewLexer(contentString)
 	//for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
 	// 	fmt.Printf("%+v\n", tok)
 	//}
