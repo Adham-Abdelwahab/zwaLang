@@ -50,12 +50,7 @@ func (i *Interpreter) evalAssignment(node *parser.Assignment) {
 }
 
 func (i *Interpreter) evalPrintStatement(node *parser.PrintStatement) {
-	val, ok := i.env[node.VarName]
-	if !ok {
-		fmt.Printf("Variable not found: %s\n", node.VarName)
-		return
-	}
-	fmt.Println(val)
+	fmt.Println(i.evalExpression(node.Expression))
 }
 
 func (i *Interpreter) evalExpression(expr parser.Expression) int {

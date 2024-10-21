@@ -16,3 +16,4 @@ show t
 qq: number = 4
 qq = qq % 2
 show qq
+show 3 + 5

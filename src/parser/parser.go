@@ -20,7 +20,7 @@ type Assignment struct {
 }
 
 type PrintStatement struct {
-	VarName string
+	Expression Expression
 }
 
 type Expression interface {
@@ -187,12 +187,7 @@ func (p *Parser) parseFactor() Expression {
 
 func (p *Parser) parsePrintStatement() Node {
 	p.nextToken()
-	// TODO: Add support for printing more than just a variable
-	if p.curToken.Type != token.IDENT {
-		fmt.Printf("Expected identifier after print statement: %+v\n", p.curToken.Literal)
-		return nil
-	}
-	return &PrintStatement{VarName: p.curToken.Literal}
+	return &PrintStatement{Expression: p.parseExpression()}
 }
 
 // -- Helper Functions --
