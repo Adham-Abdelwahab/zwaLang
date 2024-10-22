@@ -14,14 +14,16 @@ Lexer, Parser, & Interpreter are all written in go
 - Subtraction, division, multiplication
 - Read files of ext .zwa
 - Modulo support
+- Printing expr -- `show 3 + 5`
 
 ## In Development
-- Printing expr -- `show 3 + 5`
+- Assignment of an expr -- qq: number = 22 + 22
 
 ## To Develop
 - String support
+- Boolean support
+- Array support
 - Stricter rules
-- Assignment of an expr -- qq: number = 22 + 22
 
 ## Pipeline Goals:
 - Shell script to run zwa files: `zwa exec fileName.zwa`
