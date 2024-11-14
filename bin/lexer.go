@@ -1,22 +1,21 @@
-package lexer
+package bin
 
 import (
 	"unicode"
-	"zwaLang/src/token"
 )
 
 type Lexer struct {
-	input 			string
-	position 		int // current position in input (points to current char)
-	readPosition 	int // reading position (after current char)
-	ch 				byte // current char under examination
+	input        string
+	position     int  // current position in input (points to current char)
+	readPosition int  // reading position (after current char)
+	ch           byte // current char under examination
 }
 
 // NewLexer initializes a new lexer with the given input string
 func NewLexer(input string) *Lexer {
 	l := &Lexer{input: input}
 	l.readChar()
-	return l;
+	return l
 }
 
 // -- Receiver Functions --
@@ -24,7 +23,7 @@ func NewLexer(input string) *Lexer {
 // Read the next character in the input
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
-		l.ch = 0; // Indicates EOF
+		l.ch = 0 // Indicates EOF
 	} else {
 		l.ch = l.input[l.readPosition]
 	}
@@ -33,46 +32,46 @@ func (l *Lexer) readChar() {
 }
 
 // NextToken generates the next token from the input
-func (l *Lexer) NextToken() token.Token {
-	var tok token.Token
+func (l *Lexer) NextToken() Token {
+	var tok Token
 
 	l.skipWhitespace()
 
 	switch l.ch {
-		case '=':
-			tok = newToken(token.ASSIGN, l.ch)
-		case '+':
-			tok = newToken(token.PLUS, l.ch)
-		case '-':
-			tok = newToken(token.MINUS, l.ch)
-		case '*':
-			tok = newToken(token.ASTERISK, l.ch)
-		case '/':
-			tok = newToken(token.SLASH, l.ch)
-		case ':':
-			tok = newToken(token.COLON, l.ch)
-		case '(':
-			tok = newToken(token.LPAREN, l.ch)
-		case ')':
-			tok = newToken(token.RPAREN, l.ch)
-		case '%':
-			tok = newToken(token.MODULO, l.ch)
-		case 0:
-			tok.Literal = ""
-			tok.Type = token.EOF
-		default:
-			if isLetter(l.ch) {
-				identifier := l.readIdentifier()
-				tok.Type = lookupIdentifier(identifier)
-				tok.Literal = identifier
-				return tok
-			} else if isDigit(l.ch) {
-				tok.Type = token.NUMBER
-				tok.Literal = l.readNumber()
-				return tok
-			} else {
-				tok = newToken(token.ILLEGAL, l.ch)
-			}
+	case '=':
+		tok = newToken(ASSIGN, l.ch)
+	case '+':
+		tok = newToken(PLUS, l.ch)
+	case '-':
+		tok = newToken(MINUS, l.ch)
+	case '*':
+		tok = newToken(ASTERISK, l.ch)
+	case '/':
+		tok = newToken(SLASH, l.ch)
+	case ':':
+		tok = newToken(COLON, l.ch)
+	case '(':
+		tok = newToken(LPAREN, l.ch)
+	case ')':
+		tok = newToken(RPAREN, l.ch)
+	case '%':
+		tok = newToken(MODULO, l.ch)
+	case 0:
+		tok.Literal = ""
+		tok.Type = EOF
+	default:
+		if isLetter(l.ch) {
+			identifier := l.readIdentifier()
+			tok.Type = lookupIdentifier(identifier)
+			tok.Literal = identifier
+			return tok
+		} else if isDigit(l.ch) {
+			tok.Type = NUMBER
+			tok.Literal = l.readNumber()
+			return tok
+		} else {
+			tok = newToken(ILLEGAL, l.ch)
+		}
 	}
 
 	l.readChar()
@@ -109,8 +108,8 @@ func (l *Lexer) readIdentifier() string {
 // -- Helper Functions --
 
 // newToken creates a new token with the given type and literal
-func newToken(tokenType token.TokenType, ch byte) token.Token {
-	return token.Token{Type: tokenType, Literal: string(ch)}
+func newToken(tokenType TokenType, ch byte) Token {
+	return Token{Type: tokenType, Literal: string(ch)}
 }
 
 // isLetter checks if the given character is a letter
@@ -124,13 +123,13 @@ func isDigit(ch byte) bool {
 }
 
 // lookupIdentifier checks if the given identifier is a keyword (i.e. show) and returns the corresponding token type
-func lookupIdentifier(identifier string) token.TokenType {
+func lookupIdentifier(identifier string) TokenType {
 	switch identifier {
-		case "show":
-			return token.SHOW
-		case "number":
-			return token.NATURAL_NUMBER_TYPE
-		default:
-			return token.IDENT
+	case "show":
+		return SHOW
+	case "number":
+		return NATURAL_NUMBER_TYPE
+	default:
+		return IDENT
 	}
 }
