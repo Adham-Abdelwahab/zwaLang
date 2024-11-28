@@ -28,3 +28,6 @@ Lexer, Parser, & Interpreter are all written in go
 ## Pipeline Goals:
 - Shell script to run zwa files: `zwa exec fileName.zwa`
 - Syntax highlighting for zwaLang
+
+
+Special thank you to Adham Abdelwahab for his contributions!
