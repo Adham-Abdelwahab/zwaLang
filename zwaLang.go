@@ -24,7 +24,7 @@ func main() {
 				if filepath.Ext(filename) != ".zwa" {
 					fmt.Println("Failed to compile", filename, ": file must have a .zwa extension")
 				} else {
-					fmt.Println("Output of", filename)
+					fmt.Println("\tOutput of", filename)
 					compile(filename)
 				}
 			}
@@ -36,7 +36,7 @@ func main() {
 }
 
 func help(name string) {
-	fmt.Println("usage:", name, "[exec | help] <file name>")
+	fmt.Println("usage:", name, "[exec | help] <file name(s)>")
 }
 
 func compile(filename string) {
@@ -46,19 +46,8 @@ func compile(filename string) {
 		os.Exit(1)
 	}
 
-	l := compiler.NewLexer(string(content))
-	//for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-	// 	fmt.Printf("%+v\n", tok)
-	//}
+	token_stream := compiler.Lex(string(content))
+	ast := compiler.Parse(token_stream)
 
-	p := compiler.NewParser(l)
-	//fmt.Printf("%+v\n", p)
-	ast := p.ParseProgram()
-	//fmt.Printf("%+v\n", ast)
-
-	// for _, node := range ast {
-	// 	fmt.Printf("%+v\n", node)
-	// }
-	i := compiler.NewInterpreter()
-	i.Eval(ast)
+	compiler.Interpret(ast)
 }

@@ -1,8 +1,9 @@
-x: number = 10
-y: number = 20
-t: number = 20
+x = 10
+y = 15
+t = 20
 z = x + y + t
 show z
+show x + y + t
 t = 100
 show t
 x = x * y
@@ -13,7 +14,14 @@ t = t / y
 show t
 t = (3 + 2) * 5
 show t
-qq: number = 4
+qq = ((4))
 qq = qq % 2
 show qq
 show 3 + 5
+
+str = ("string123")
+show (str) + 1
+show 1 + str
+show str * 3
+str = str + 2 + 3
+show str - "123"

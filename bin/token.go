@@ -4,25 +4,34 @@ package bin
 type TokenType string
 
 const (
+	IDENT TokenType = "IDENT" // Identifiers
+
+	// Statements
+	EQUALS TokenType = "EQUALS" // =
+	COLON  TokenType = "COLON"  // :
+	SHOW   TokenType = "SHOW"   // show
+
+	// Operators
+	PLUS     TokenType = "PLUS"     // +
+	MINUS    TokenType = "MINUS"    // -
+	ASTERISK TokenType = "ASTERISK" // *
+	SLASH    TokenType = "SLASH"    // / {division}
+	MODULO   TokenType = "MODULO"   // %
+
+	// Expressions
 	NUMBER              TokenType = "NUMBER"              // Number
+	STRING              TokenType = "STRING"              // String literal
 	NATURAL_NUMBER_TYPE TokenType = "NATURAL_NUMBER_TYPE" // Natural Number Type
-	IDENT               TokenType = "IDENT"               // Identifiers
-	ASSIGN              TokenType = "ASSIGN"              // =
-	PLUS                TokenType = "PLUS"                // +
-	COLON               TokenType = "COLON"               // :
-	SHOW                TokenType = "SHOW"                // show
-	EOF                 TokenType = "EOF"                 // End of File
 	LPAREN              TokenType = "LPAREN"              // (
 	RPAREN              TokenType = "RPAREN"              // )
-	ILLEGAL             TokenType = "ILLEGAL"             // Illegal token
-	MINUS               TokenType = "MINUS"               // -
-	ASTERISK            TokenType = "ASTERISK"            // *
-	SLASH               TokenType = "SLASH"               // / {division}
-	MODULO              TokenType = "MODULO"              // %
+
+	// Misc
+	EOF     TokenType = "EOF"     // End of File
+	ILLEGAL TokenType = "ILLEGAL" // Illegal token
 )
 
 // Token structure
-type Token struct {
+type token struct {
 	Type    TokenType
 	Literal string
 }
