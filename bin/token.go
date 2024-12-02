@@ -18,12 +18,15 @@ const (
 	SLASH    TokenType = "SLASH"    // / {division}
 	MODULO   TokenType = "MODULO"   // %
 
+	AND TokenType = "AND" // &
+	OR  TokenType = "OR"  // |
+
 	// Expressions
-	NUMBER              TokenType = "NUMBER"              // Number
-	STRING              TokenType = "STRING"              // String literal
-	NATURAL_NUMBER_TYPE TokenType = "NATURAL_NUMBER_TYPE" // Natural Number Type
-	LPAREN              TokenType = "LPAREN"              // (
-	RPAREN              TokenType = "RPAREN"              // )
+	NUMBER TokenType = "NUMBER" // Number
+	STRING TokenType = "STRING" // String literal
+	BOOL   TokenType = "BOOL"
+	LPAREN TokenType = "LPAREN" // (
+	RPAREN TokenType = "RPAREN" // )
 
 	// Misc
 	EOF     TokenType = "EOF"     // End of File

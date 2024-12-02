@@ -104,6 +104,10 @@ func (lexer *Lexer) Tokenize() Tokens {
 		Type = RPAREN
 	case '%':
 		Type = MODULO
+	case '&':
+		Type = AND
+	case '|':
+		Type = OR
 	case '"':
 		Type = STRING
 		tok.Literal = lexer.readString()
@@ -114,8 +118,8 @@ func (lexer *Lexer) Tokenize() Tokens {
 			switch identifier {
 			case "show":
 				Type = SHOW
-			case "number":
-				Type = NATURAL_NUMBER_TYPE
+			case "true", "false":
+				Type = BOOL
 			default:
 				Type = IDENT
 			}

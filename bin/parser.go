@@ -40,7 +40,7 @@ func (parser *Parser) parseStatements() AST {
 func (parser *Parser) peekTokenIsOperator() bool {
 	if tok, ok := parser.Peek(); ok {
 		switch tok.Type {
-		case PLUS, MINUS, ASTERISK, SLASH, MODULO:
+		case PLUS, MINUS, ASTERISK, SLASH, MODULO, AND, OR:
 			return true
 		}
 	}
@@ -59,6 +59,8 @@ func (parser *Parser) parseExpression(current token, ok bool) Expression {
 		expr = NumberLiteral{Value: Atoi(current.Literal)}
 	case STRING:
 		expr = StringLiteral{Value: current.Literal}
+	case BOOL:
+		expr = BoolLiteral{Value: Btoa(current.Literal)}
 	case IDENT:
 		expr = Variable{Value: current.Literal}
 	case LPAREN:
