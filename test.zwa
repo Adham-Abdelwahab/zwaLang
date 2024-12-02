@@ -25,3 +25,14 @@ show 1 + str
 show str * 3
 str = str + 2 + 3
 show str - "123"
+
+show true & true
+show true * true
+show true & false
+show true | false
+show 1 | false
+show -1 | false
+show "123" * true
+show "123" * false
+show 1361384 / true
+show 13243145 / false

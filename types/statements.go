@@ -14,7 +14,6 @@ type Assignment struct {
 	Name  string
 	Value Expression
 }
-
 type Print struct {
 	Value Expression
 }
@@ -25,7 +24,6 @@ func (assign Assignment) Evaluate(env env) {
 	expr := assign.Value.Concrete(env)
 	env[assign.Name] = expr
 }
-
 func (print Print) Evaluate(env env) {
 	expr := print.Value.Concrete(env)
 	fmt.Println(expr)
