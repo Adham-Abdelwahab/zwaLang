@@ -1,135 +1,138 @@
 package bin
 
-import (
-	"unicode"
-)
+import "zwa/utils"
+
+type Tokens = utils.Queue[token]
 
 type Lexer struct {
-	input        string
-	position     int  // current position in input (points to current char)
-	readPosition int  // reading position (after current char)
-	ch           byte // current char under examination
+	utils.Queue[rune]
+	tokens Tokens
 }
 
-// NewLexer initializes a new lexer with the given input string
-func NewLexer(input string) *Lexer {
-	l := &Lexer{input: input}
-	l.readChar()
-	return l
-}
-
-// -- Receiver Functions --
-
-// Read the next character in the input
-func (l *Lexer) readChar() {
-	if l.readPosition >= len(l.input) {
-		l.ch = 0 // Indicates EOF
-	} else {
-		l.ch = l.input[l.readPosition]
+func Lex(content string) Tokens {
+	lexer := Lexer{utils.NewQueue[rune](), utils.NewQueue[token]()}
+	for _, c := range content {
+		lexer.Push(c)
 	}
-	l.position = l.readPosition
-	l.readPosition += 1
-}
-
-// NextToken generates the next token from the input
-func (l *Lexer) NextToken() Token {
-	var tok Token
-
-	l.skipWhitespace()
-
-	switch l.ch {
-	case '=':
-		tok = newToken(ASSIGN, l.ch)
-	case '+':
-		tok = newToken(PLUS, l.ch)
-	case '-':
-		tok = newToken(MINUS, l.ch)
-	case '*':
-		tok = newToken(ASTERISK, l.ch)
-	case '/':
-		tok = newToken(SLASH, l.ch)
-	case ':':
-		tok = newToken(COLON, l.ch)
-	case '(':
-		tok = newToken(LPAREN, l.ch)
-	case ')':
-		tok = newToken(RPAREN, l.ch)
-	case '%':
-		tok = newToken(MODULO, l.ch)
-	case 0:
-		tok.Literal = ""
-		tok.Type = EOF
-	default:
-		if isLetter(l.ch) {
-			identifier := l.readIdentifier()
-			tok.Type = lookupIdentifier(identifier)
-			tok.Literal = identifier
-			return tok
-		} else if isDigit(l.ch) {
-			tok.Type = NUMBER
-			tok.Literal = l.readNumber()
-			return tok
-		} else {
-			tok = newToken(ILLEGAL, l.ch)
-		}
-	}
-
-	l.readChar()
-	return tok
+	lexer.Tokenize()
+	return lexer.tokens
 }
 
 // skipWhitespace skips over whitespace characters and advances the lexer's position if necessary
-func (l *Lexer) skipWhitespace() {
-	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
-		l.readChar() // Read the next character
+func (lexer *Lexer) skipWhitespace() (rune, bool) {
+	if c, ok := lexer.Pop(); ok {
+		switch c {
+		case ' ', '\t', '\n', '\r':
+			return lexer.skipWhitespace()
+		default:
+			return c, true
+		}
+	} else {
+		return c, false
 	}
-}
-
-// readNumber reads a number from the input and returns it as a string
-func (l *Lexer) readNumber() string {
-	position := l.position
-	for isDigit(l.ch) {
-		l.readChar()
-	}
-
-	return l.input[position:l.position]
-}
-
-// readIdentifier reads an identifier from the input and returns it as a string
-func (l *Lexer) readIdentifier() string {
-	position := l.position
-	for isLetter(l.ch) {
-		l.readChar()
-	}
-
-	return l.input[position:l.position]
-}
-
-// -- Helper Functions --
-
-// newToken creates a new token with the given type and literal
-func newToken(tokenType TokenType, ch byte) Token {
-	return Token{Type: tokenType, Literal: string(ch)}
 }
 
 // isLetter checks if the given character is a letter
-func isLetter(ch byte) bool {
-	return unicode.IsLetter(rune(ch)) || ch == '_'
+func isLetter(c rune) bool {
+	return 'a' <= c && c <= 'z' || 'A' <= c && c <= 'Z'
+}
+
+// readIdentifier reads an identifier from the input and returns it as a string
+func (lexer *Lexer) readIdentifier(c rune) string {
+	ident := string(c)
+	peek, ok := lexer.Peek()
+	if !ok || !isLetter(peek) {
+		return ident
+	}
+	next, _ := lexer.Pop()
+	return ident + lexer.readIdentifier(next)
 }
 
 // isDigit checks if the given character is a digit
-func isDigit(ch byte) bool {
-	return '0' <= ch && ch <= '9'
+func isDigit(c rune) bool {
+	return '0' <= c && c <= '9'
 }
 
-// lookupIdentifier checks if the given identifier is a keyword (i.e. show) and returns the corresponding token type
-func lookupIdentifier(identifier string) TokenType {
-	switch identifier {
-	case "show":
-		return SHOW
-	case "number":
-		return NATURAL_NUMBER_TYPE
-	default:
-		return IDENT
+// readNumber reads a number from the input and returns it as a string
+func (lexer *Lexer) readNumber(c rune) string {
+	num := string(c)
+	peek, ok := lexer.Peek()
+	if !ok || !isDigit(peek) {
+		return num
 	}
+	next, _ := lexer.Pop()
+	return num + lexer.readNumber(next)
+}
+
+func (lexer *Lexer) readString() string {
+	if next, ok := lexer.Pop(); ok {
+		if next == '"' {
+			return ""
+		} else {
+			return string(next) + lexer.readString()
+		}
+	} else {
+		print("ERROR: String failed to terminate\n")
+		return "ERROR"
+	}
+}
+
+func (lexer *Lexer) Tokenize() Tokens {
+	c, ok := lexer.skipWhitespace()
+	if !ok {
+		return lexer.tokens
+	}
+
+	var tok = token{Literal: string(c)}
+	var Type TokenType
+	switch c {
+	case '=':
+		Type = EQUALS
+	case '+':
+		Type = PLUS
+	case '-':
+		Type = MINUS
+	case '*':
+		Type = ASTERISK
+	case '/':
+		Type = SLASH
+	case ':':
+		Type = COLON
+	case '(':
+		Type = LPAREN
+	case ')':
+		Type = RPAREN
+	case '%':
+		Type = MODULO
+	case '&':
+		Type = AND
+	case '|':
+		Type = OR
+	case '"':
+		Type = STRING
+		tok.Literal = lexer.readString()
+	default:
+		switch {
+		case isLetter(c):
+			identifier := lexer.readIdentifier(c)
+			switch identifier {
+			case "show":
+				Type = SHOW
+			case "true", "false":
+				Type = BOOL
+			default:
+				Type = IDENT
+			}
+			tok.Literal = identifier
+		case isDigit(c):
+			Type = NUMBER
+			tok.Literal = lexer.readNumber(c)
+		default:
+			Type = ILLEGAL
+		}
+	}
+
+	tok.Type = Type
+	lexer.tokens.Push(tok)
+	return lexer.Tokenize()
 }
